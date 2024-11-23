@@ -32,3 +32,8 @@ cp .env.example .env
 ```shell
 go run server.go
 ```
+
+## Client
+```shell
+go run client.go
+```
