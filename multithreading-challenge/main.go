@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
 
 type BrasilApi struct {
@@ -26,15 +27,53 @@ type ViaCep struct {
 	Street       string `json:"logradouro"`
 }
 
+type ResponseDto struct {
+	Data  interface{}
+	Error error
+}
+
 func main() {
 	log.Println("> multithreading challenge")
-	cep := "91540000"
-	a1, _ := getAddressByBrasilApi(cep)
-	fmt.Println(a1)
+	cep := "90010300"
 
-	a2, _ := getAddressByViaCep(cep)
-	fmt.Println(a2)
+	brasilApiChannel := make(chan ResponseDto)
+	viaCepChannel := make(chan ResponseDto)
 
+	go executeBrasilApi(cep, brasilApiChannel)
+	go executeViaCep(cep, viaCepChannel)
+
+	select {
+	case resp := <-brasilApiChannel:
+		log.Printf("brasilApi: %v\n", resp.Data)
+	case resp := <-viaCepChannel:
+		log.Printf("viaCep: %v\n", resp.Data)
+	case <-time.After(1 * time.Second):
+		log.Println("timeout")
+	}
+}
+
+func executeBrasilApi(cep string, ch chan<- ResponseDto) {
+	log.Println("calling brasil api")
+	// time.Sleep(2000 * time.Millisecond)
+	address, err := getAddressByBrasilApi(cep)
+	response := ResponseDto{
+		Data:  address,
+		Error: err,
+	}
+	log.Println("brasil api called")
+	ch <- response
+}
+
+func executeViaCep(cep string, ch chan<- ResponseDto) {
+	log.Println("calling via cep")
+	// time.Sleep(3000 * time.Millisecond)
+	address, err := getAddressByViaCep(cep)
+	response := ResponseDto{
+		Data:  address,
+		Error: err,
+	}
+	log.Println("via cep called")
+	ch <- response
 }
 
 func getAddressByBrasilApi(cep string) (*BrasilApi, error) {
