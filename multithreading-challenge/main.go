@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -36,44 +37,58 @@ func main() {
 	log.Println("> multithreading challenge")
 	cep := "90010300"
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	brasilApiChannel := make(chan ResponseDto)
 	viaCepChannel := make(chan ResponseDto)
 
-	go executeBrasilApi(cep, brasilApiChannel)
-	go executeViaCep(cep, viaCepChannel)
+	go executeBrasilApi(ctx, cep, brasilApiChannel)
+	go executeViaCep(ctx, cep, viaCepChannel)
 
 	select {
 	case resp := <-brasilApiChannel:
 		log.Printf("brasilApi: %v\n", resp.Data)
+		cancel()
 	case resp := <-viaCepChannel:
 		log.Printf("viaCep: %v\n", resp.Data)
+		cancel()
 	case <-time.After(1 * time.Second):
 		log.Println("timeout")
+		cancel()
 	}
 }
 
-func executeBrasilApi(cep string, ch chan<- ResponseDto) {
+func executeBrasilApi(ctx context.Context, cep string, ch chan<- ResponseDto) {
 	log.Println("calling brasil api")
-	// time.Sleep(2000 * time.Millisecond)
 	address, err := getAddressByBrasilApi(cep)
 	response := ResponseDto{
 		Data:  address,
 		Error: err,
 	}
 	log.Println("brasil api called")
-	ch <- response
+
+	select {
+	case ch <- response:
+		log.Println("brasil api: emit to channel")
+	case <-ctx.Done():
+	}
 }
 
-func executeViaCep(cep string, ch chan<- ResponseDto) {
+func executeViaCep(ctx context.Context, cep string, ch chan<- ResponseDto) {
 	log.Println("calling via cep")
-	// time.Sleep(3000 * time.Millisecond)
 	address, err := getAddressByViaCep(cep)
 	response := ResponseDto{
 		Data:  address,
 		Error: err,
 	}
 	log.Println("via cep called")
-	ch <- response
+
+	select {
+	case ch <- response:
+		log.Println("via cep: emit to channel")
+	case <-ctx.Done():
+	}
 }
 
 func getAddressByBrasilApi(cep string) (*BrasilApi, error) {
