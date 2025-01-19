@@ -55,3 +55,20 @@ go mod tidy
 
 go run github.com/99designs/gqlgen generate
 ```
+
+## Google Wire
+[Documentation](https://github.com/google/wire)
+
+```bash
+go install github.com/google/wire/cmd/wire@latest
+
+# check if the wire folder was created
+ls ~/go/bin
+```
+
+Check golang configuration in PATH variable or add in the `~/.zshrc` file:
+```
+export PATH="$HOME/go/bin:/usr/local/go/bin:$PATH"
+```
+
+After change the _wire.go_ file, run the `wire` command into ___cmd/ordersystem___ folder to update the _wire_gen.go__ file.

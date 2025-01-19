@@ -25,17 +25,24 @@ func NewGetAllOrderUseCase(
 	}
 }
 
-func (uc *GetAllOrderUseCase) Execute() GetAllOrderOutputDto {
-	order := OrderOutputDTO{
-		ID:         "123",
-		Price:      10,
-		Tax:        1.99,
-		FinalPrice: 11.99,
+func (uc *GetAllOrderUseCase) Execute() (GetAllOrderOutputDto, error) {
+	entities, err := uc.OrderRepository.GetAllOrders()
+	if err != nil {
+		return GetAllOrderOutputDto{}, err
 	}
 
-	orders := []OrderOutputDTO{order}
+	var orders []OrderOutputDTO
+	for _, entity := range entities {
+		order := OrderOutputDTO{
+			ID:         entity.ID,
+			Price:      entity.Price,
+			Tax:        entity.Tax,
+			FinalPrice: entity.FinalPrice,
+		}
+		orders = append(orders, order)
+	}
 
 	return GetAllOrderOutputDto{
 		Orders: orders,
-	}
+	}, nil
 }
