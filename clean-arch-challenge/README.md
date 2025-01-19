@@ -20,3 +20,16 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 ```
 
+## GraphQL
+change the paths in gqlgen.yml to generate file in desired folder (internal/infra/graph)
+
+
+### Errors
+Invalid memory address or nil pointer error when try generate command
+Fix:
+```bash
+rm go.sum && go get -u github.com/99designs/gqlgen
+go mod tidy
+
+go run github.com/99designs/gqlgen generate
+```
