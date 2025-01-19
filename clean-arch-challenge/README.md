@@ -21,8 +21,30 @@ CREATE TABLE IF NOT EXISTS orders (
 ```
 
 ## GraphQL
-change the paths in gqlgen.yml to generate file in desired folder (internal/infra/graph)
+- change the paths in **gqlgen.yml** to generate file in desired folder (internal/infra/graph)
 
+## Playground
+```graphql
+mutation {
+  createOrder(input: { id: "123", Price: 100.0, Tax: 10.0 }) {
+    id
+    Price
+    Tax
+    FinalPrice
+  }
+}
+```
+
+```graphql
+query {
+  orders {
+    id
+    Price
+    Tax
+    FinalPrice
+  }
+}
+```
 
 ### Errors
 Invalid memory address or nil pointer error when try generate command
