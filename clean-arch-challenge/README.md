@@ -1,5 +1,11 @@
 # Clean Arch Challenge
 
+## Golang configuration
+Check if PATH variable has golang configuration or add in the `~/.zshrc` file the following line:
+```
+export PATH="$HOME/go/bin:/usr/local/go/bin:$PATH"
+```
+
 ## Database
 ```bash
 docker-compose exec mysql bash
@@ -66,9 +72,27 @@ go install github.com/google/wire/cmd/wire@latest
 ls ~/go/bin
 ```
 
-Check golang configuration in PATH variable or add in the `~/.zshrc` file:
-```
-export PATH="$HOME/go/bin:/usr/local/go/bin:$PATH"
+After change the _wire.go_ file, run the `wire` command into ___cmd/ordersystem___ folder to update the _wire_gen.go__ file.
+
+
+## gRPC
+[Go documentation](https://grpc.io/docs/languages/go/quickstart)
+
+Install and check the protobuf compiler version
+```bash
+sudo apt install protobuf-compiler
+
+protoc --version
 ```
 
-After change the _wire.go_ file, run the `wire` command into ___cmd/ordersystem___ folder to update the _wire_gen.go__ file.
+Install Go plugins
+```bash
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+# to check if the folders protoc-gen-go and protoc-gen-go were created
+ls ~/go/bin
+```
+
+Install __vscode-proto3__ plugin to work with `.proto` files.
