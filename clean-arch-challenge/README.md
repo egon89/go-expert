@@ -96,3 +96,10 @@ ls ~/go/bin
 ```
 
 Install __vscode-proto3__ plugin to work with `.proto` files.
+
+After change a _.proto_ file run the following command in the root project folder:
+```bash
+protoc --go_out=. --go-grpc_out=. internal/infra/grpc/protofiles/order.proto
+```
+
+The files _order_grpc.pb.go_ and _order.pb.go_ in _pb_ folder will be updated.
