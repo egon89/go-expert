@@ -118,14 +118,11 @@ Run __evans__ command in the project root folder:
 evans --proto internal/infra/grpc/protofiles/order.proto repl
 ```
 
-Show available services:
-![show-service](docs/evans-show-service.png)
-<br/>
+<p>Show available services:</p>
+<img src="docs/evans-show-service.png">
 
-Create an order:
-![create-order](docs/evans-create-order.png)
-<br/>
+<p>Create an order:</p>
+<img src="docs/evans-create-order.png">
 
-Get all orders:
-![get-all-orders](docs/evans-get-all-orders.png)
-<br/>
+<p>Get all orders:</p>
+<img src="docs/evans-get-all-orders.png">
