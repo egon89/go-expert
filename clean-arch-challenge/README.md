@@ -1,17 +1,39 @@
 # Clean Arch Challenge
 
-## Golang configuration
-Check if PATH variable has golang configuration or add in the `~/.zshrc` file the following line:
-```
-export PATH="$HOME/go/bin:/usr/local/go/bin:$PATH"
+## Application
+To run:
+```bash
+docker-compose up -d
+
+make run
 ```
 
 ## Database
+Access docker database:
 ```bash
 docker-compose exec mysql bash
 mysql -u root -p
+
+show databases;
+use orders;
+show tables;
 ```
 
+### golang-migrate
+[Installation](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate#linux-deb-package)
+
+```bash
+# create a migration
+migrate create -ext=sql -dir=database -seq init
+
+# up
+migrate -path=database -database="mysql://user:password@tcp(localhost:3306)/orders" -verbose up
+
+# down
+migrate -path=database -database="mysql://user:password@tcp(localhost:3306)/orders" -verbose up
+```
+
+Or you can just run the following sql into database:
 ```sql
 CREATE DATABASE IF NOT EXISTS orders;
 
@@ -27,9 +49,10 @@ CREATE TABLE IF NOT EXISTS orders (
 ```
 
 ## GraphQL
-- change the paths in **gqlgen.yml** to generate file in desired folder (internal/infra/graph)
 
-## Playground
+### Playground
+Go to [http://localhost:8080](http://localhost:8080) in your browser to access the GraphQL Playground
+
 ```graphql
 mutation {
   createOrder(input: { id: "123", Price: 100.0, Tax: 10.0 }) {
@@ -52,9 +75,18 @@ query {
 }
 ```
 
+### Configuration
+- Change the paths in *gqlgen.yml* to generate file in desired folder (internal/infra/graph)
+- Use the file *schema.graphqls* to create the schemas
+  - use the **Mutation** type to do some action in the types
+  - use the **Query** type to get informations
+- **Resolvers** are "methods" that will be executed when a GraphQL action is called
+
+The command `go run github.com/99designs/gqlgen generate`
+will change the *schema.resolvers.go* file according to *schema.graphqls* file
+
 ### Errors
-Invalid memory address or nil pointer error when try generate command
-Fix:
+Invalid memory address or nil pointer error when try generate command:
 ```bash
 rm go.sum && go get -u github.com/99designs/gqlgen
 go mod tidy
@@ -72,7 +104,7 @@ go install github.com/google/wire/cmd/wire@latest
 ls ~/go/bin
 ```
 
-After change the _wire.go_ file, run the `wire` command into ___cmd/ordersystem___ folder to update the _wire_gen.go__ file.
+After change the *wire.go* file, run the `wire` command into *cmd/ordersystem* folder to update the *wire_gen.go* file.
 
 
 ## gRPC
@@ -97,12 +129,12 @@ ls ~/go/bin
 
 Install __vscode-proto3__ plugin to work with `.proto` files.
 
-After change a _.proto_ file run the following command in the root project folder:
+After change a *.proto* file run the following command in the root project folder:
 ```bash
 protoc --go_out=. --go-grpc_out=. internal/infra/grpc/protofiles/order.proto
 ```
 
-The files _order_grpc.pb.go_ and _order.pb.go_ in _pb_ folder will be updated.
+The files *order_grpc.pb.go* and *order.pb.go* in *pb* folder will be updated.
 
 
 ### Install Evans
@@ -113,7 +145,7 @@ go install github.com/ktr0731/evans@latest
 ls ~/go/bin
 ```
 
-Run __evans__ command in the project root folder:
+Run **evans** command in the project root folder:
 ```bash
 evans --proto internal/infra/grpc/protofiles/order.proto repl
 ```
@@ -126,3 +158,10 @@ evans --proto internal/infra/grpc/protofiles/order.proto repl
 
 <p>Get all orders:</p>
 <img src="docs/evans-get-all-orders.png">
+
+
+## Golang configuration
+Check if PATH variable has golang configuration or add in the `~/.zshrc` file the following line:
+```
+export PATH="$HOME/go/bin:/usr/local/go/bin:$PATH"
+```
