@@ -103,3 +103,29 @@ protoc --go_out=. --go-grpc_out=. internal/infra/grpc/protofiles/order.proto
 ```
 
 The files _order_grpc.pb.go_ and _order.pb.go_ in _pb_ folder will be updated.
+
+
+### Install Evans
+```bash
+go install github.com/ktr0731/evans@latest
+
+# to check if the folder evans was created
+ls ~/go/bin
+```
+
+Run __evans__ command in the project root folder:
+```bash
+evans --proto internal/infra/grpc/protofiles/order.proto repl
+```
+
+Show available services:
+![show-service](docs/evans-show-service.png)
+<br/>
+
+Create an order:
+![create-order](docs/evans-create-order.png)
+<br/>
+
+Get all orders:
+![get-all-orders](docs/evans-get-all-orders.png)
+<br/>
