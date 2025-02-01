@@ -3,7 +3,11 @@ Host: localhost:8000
 Content-Type: application/json
 
 {
-    "id":"a",
+    "id":"31deda1d-b037-4aee-a4e2-5c19e97bc68a",
     "price": 100.5,
     "tax": 0.5
 }
+
+
+### get all orders
+POST http://localhost:8000/orders HTTP/1.1
