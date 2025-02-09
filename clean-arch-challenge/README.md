@@ -24,13 +24,13 @@ show tables;
 
 ```bash
 # create a migration
-migrate create -ext=sql -dir=database -seq init
+migrate create -ext=sql -dir=database/migrations -seq init
 
 # up
-migrate -path=database -database="mysql://user:password@tcp(localhost:3306)/orders" -verbose up
+migrate -path=database/migrations -database="mysql://user:password@tcp(localhost:3306)/orders" -verbose up
 
 # down
-migrate -path=database -database="mysql://user:password@tcp(localhost:3306)/orders" -verbose up
+migrate -path=database/migrations -database="mysql://user:password@tcp(localhost:3306)/orders" -verbose up
 ```
 
 Or you can just run the following sql into database:
