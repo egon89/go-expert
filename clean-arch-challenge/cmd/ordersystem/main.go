@@ -45,7 +45,7 @@ func main() {
 	createOrderUseCase := NewCreateOrderUseCase(db, eventDispatcher)
 	getAllOrderUseCase := NewGetAllOrderUseCase(db)
 
-	webserver := webserver.NewWebServer(configs.WebServerPort)
+	webserver := webserver.NewWebServer(fmt.Sprintf(":%s", configs.WebServerPort))
 	webOrderHandler := NewWebOrderHandler(db, eventDispatcher)
 	webserver.AddHandler("/order", webOrderHandler.Create)
 	webserver.AddHandler("/orders", webOrderHandler.GetAllOrders)
@@ -76,7 +76,7 @@ func main() {
 }
 
 func getRabbitMQChannel() *amqp.Channel {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
 	if err != nil {
 		panic(err)
 	}

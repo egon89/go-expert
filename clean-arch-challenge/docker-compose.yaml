@@ -1,6 +1,25 @@
 version: '3'
 
 services:
+  app:
+    container_name: app
+    build: .
+    volumes:
+      - ./:/app
+    ports:
+      - ${WEB_SERVER_PORT:-8000}:${WEB_SERVER_PORT:-8000}  # HTTP Server
+      - ${GRPC_SERVER_PORT:-50051}:${GRPC_SERVER_PORT:-50051}  # gRPC Server
+      - ${GRAPHQL_SERVER_PORT:-8080}:${GRAPHQL_SERVER_PORT:-8080}  # GraphQL Server
+    environment:
+      - WEB_SERVER_PORT=${WEB_SERVER_PORT:-8000}
+      - GRPC_SERVER_PORT=${GRPC_SERVER_PORT:-50051}
+      - GRAPHQL_SERVER_PORT=${GRAPHQL_SERVER_PORT:-8080}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
   mysql:
     image: mysql:5.7
     container_name: mysql
@@ -37,6 +56,11 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 30s
+      timeout: 30s
+      retries: 3
 
 volumes:
     mysql_db_data:

@@ -3,9 +3,7 @@
 ## Application
 To run:
 ```bash
-docker-compose up -d
-
-make run
+docker-compose up
 ```
 
 ## Database
