@@ -1,6 +1,6 @@
 module github.com/devfullcycle/20-CleanArch
 
-go 1.22.5
+go 1.23
 
 toolchain go1.23.3
 

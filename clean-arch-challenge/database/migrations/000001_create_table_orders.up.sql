@@ -1,5 +1,3 @@
-CREATE DATABASE IF NOT EXISTS orders;
-
 USE orders;
 
 CREATE TABLE IF NOT EXISTS orders (
