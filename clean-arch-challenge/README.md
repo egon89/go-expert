@@ -3,6 +3,10 @@
 ## Application
 To run:
 ```bash
+# create a .env file
+cp .env.example .env
+
+# run the application in development mode
 docker-compose up
 ```
 
