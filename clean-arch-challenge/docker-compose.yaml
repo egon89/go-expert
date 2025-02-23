@@ -62,5 +62,20 @@ services:
       timeout: 30s
       retries: 3
 
+  app-prd:
+    container_name: app-prd
+    build: .
+    ports:
+      - "8000:8000"
+      - "50051:50051"
+      - "8080:8080"
+    # depends_on:
+    #   mysql:
+    #     condition: service_healthy
+    #   rabbitmq:
+    #     condition: service_healthy
+    profiles:
+      - prd
+
 volumes:
     mysql_db_data:
