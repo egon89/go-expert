@@ -6,8 +6,11 @@ To run:
 # create a .env file
 cp .env.example .env
 
+# run the application
+make run
+
 # run the application in development mode
-docker-compose up
+make dev-run
 ```
 
 ## Database
