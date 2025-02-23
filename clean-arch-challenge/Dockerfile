@@ -1,22 +1,24 @@
-FROM golang:1.23
-
-ARG WEB_SERVER_PORT
-ARG GRPC_SERVER_PORT
-ARG GRAPHQL_SERVER_PORT
-
-ENV WEB_SERVER_PORT=${WEB_SERVER_PORT}
-ENV GRPC_SERVER_PORT=${GRPC_SERVER_PORT}
-ENV GRAPHQL_SERVER_PORT=${GRAPHQL_SERVER_PORT}
+# Stage 1: Build the Go application
+FROM golang:1.23 AS builder
 
 WORKDIR /app
-
-RUN go install github.com/air-verse/air@latest
 
 COPY go.mod go.sum ./
 RUN go mod download
 
-EXPOSE ${WEB_SERVER_PORT}
-EXPOSE ${GRPC_SERVER_PORT}
-EXPOSE ${GRAPHQL_SERVER_PORT}
+COPY . .
 
-CMD ["air", "-c", "air.toml"]
+RUN CGO_ENABLED=0 go build -o /app/ordersystem cmd/ordersystem/main.go cmd/ordersystem/wire_gen.go
+
+# Stage 2: Create a minimal production image
+FROM gcr.io/distroless/static-debian12:nonroot
+
+COPY --from=builder --chown=nonroot:nonroot /app/ordersystem /
+
+WORKDIR /
+
+EXPOSE 8000 50051 8080
+
+USER nonroot
+
+CMD ["./ordersystem"]
