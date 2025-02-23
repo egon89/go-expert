@@ -1,6 +1,6 @@
 package usecase
 
-import "github.com/devfullcycle/20-CleanArch/internal/entity"
+import "github.com/egon89/clean-arch-challenge/internal/entity"
 
 type OrderOutputDto struct {
 	ID         string  `json:"id"`

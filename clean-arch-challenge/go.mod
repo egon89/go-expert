@@ -1,4 +1,4 @@
-module github.com/devfullcycle/20-CleanArch
+module github.com/egon89/clean-arch-challenge
 
 go 1.23
 
