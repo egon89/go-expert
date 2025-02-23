@@ -69,13 +69,21 @@ services:
       - "8000:8000"
       - "50051:50051"
       - "8080:8080"
-    # depends_on:
-    #   mysql:
-    #     condition: service_healthy
-    #   rabbitmq:
-    #     condition: service_healthy
-    profiles:
-      - prd
+    environment:
+      - WEB_SERVER_PORT=${WEB_SERVER_PORT}
+      - GRPC_SERVER_PORT=${GRPC_SERVER_PORT}
+      - GRAPHQL_SERVER_PORT=${GRAPHQL_SERVER_PORT}
+      - DB_DRIVER=${DB_DRIVER}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
     mysql_db_data:
